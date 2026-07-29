@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TownOfHost-Fun</title>
+  <link rel="stylesheet" href="../src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="topbar__brand">TownOfHost-Fun</div>
+
+      <nav id="breadcrumb" class="breadcrumb" aria-label="パンくずリスト">
+        <span id="page-title">読み込み中…</span>
+      </nav>
+
+      <nav class="content__links" aria-label="外部リンク">
+        <a href="https://github.com/ToritenKabosu/TownOfHost-Fun" target="_blank" rel="noreferrer noopener">GitHub リポジトリ ↗</a>
+      </nav>
+    </header>
+
+    <div class="body-layout">
+      <aside class="sidebar" aria-label="Wiki メニュー">
+        <div class="sidebar__search">
+          <label class="visually-hidden" for="wiki-search">Wikiを検索</label>
+          <svg class="sidebar__search-icon" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="m11.5 10.5 3 3m-6.75-1.25a5.25 5.25 0 1 1 0-10.5 5.25 5.25 0 0 1 0 10.5Z" />
+          </svg>
+          <input id="wiki-search" type="search" placeholder="ページを検索" autocomplete="off" />
+        </div>
+        <nav id="wiki-menu" aria-label="ページ一覧">
+          <p class="menu-loading">メニュー読み込み中…</p>
+        </nav>
+      </aside>
+      <div
+        id="sidebar-resizer"
+        role="separator"
+        aria-label="サイドバーの幅を変更"
+        aria-orientation="vertical"
+        aria-valuemin="200"
+        aria-valuemax="480"
+        aria-valuenow="280"
+        tabindex="0"
+      ></div>
+
+      <main class="content">
+        <div id="wiki-content" class="markdown-body">
+          <p>読み込み中...</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="../src/main.ts"></script>
+</body>
+</html>
