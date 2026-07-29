@@ -326,7 +326,7 @@ function createMainPageBreadcrumb(): HTMLAnchorElement {
 
 function createWikiBreadcrumb(): HTMLAnchorElement {
   const link = document.createElement('a');
-  link.href = `wiki/#page=${encodeURIComponent(DEFAULT_PAGE)}`;
+  link.href = `#page=${encodeURIComponent(DEFAULT_PAGE)}`;
   link.dataset.wikiPage = DEFAULT_PAGE;
   link.textContent = 'Wiki';
   return link;
@@ -334,7 +334,7 @@ function createWikiBreadcrumb(): HTMLAnchorElement {
 
 function createPageBreadcrumb(pageName: string, label = pageName): HTMLAnchorElement {
   const link = document.createElement('a');
-  link.href = `wiki/#page=${encodeURIComponent(pageName)}`;
+  link.href = `#page=${encodeURIComponent(pageName)}`;
   link.dataset.wikiPage = pageName;
   link.textContent = label;
   return link;
@@ -346,7 +346,7 @@ function createCategoryBreadcrumb(details: HTMLDetailsElement): HTMLAnchorElemen
   if (!categoryId || !summary?.textContent?.trim()) return null;
 
   const link = document.createElement('a');
-  link.href = `wiki/#category=${encodeURIComponent(categoryId)}`;
+  link.href = `#category=${encodeURIComponent(categoryId)}`;
   link.dataset.categoryId = categoryId;
   link.textContent = summary.textContent.trim();
   return link;

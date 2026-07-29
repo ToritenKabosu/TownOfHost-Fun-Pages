@@ -1,170 +1,58 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TownOfHost-Fun</title>
-  <link rel="stylesheet" crossorigin href="../assets/index-C3edaE_z.css">
-  <style>
-    .main-copy { display: flex; flex-direction: column; align-items: center; }
-    .section-card { max-width: 760px; width: 100%; }
-    .main-copy__section h2 { text-align: left; margin-left: 0; }
-    .section-card__body p { color: #2b3240; }
-  </style>
-  <link rel="stylesheet" crossorigin href="../assets/index-CPsd79rh.css">
+  <title>TownOfHost-Fun</title>
+  <script type="module" crossorigin src="../assets/wiki-BSjqHZO5.js"></script>
+  <link rel="stylesheet" crossorigin href="../assets/wiki-CaOP_eO-.css">
+  <link rel="stylesheet" crossorigin href="../assets/style-CPsd79rh.css">
 </head>
-
 <body>
   <div id="app">
     <header class="topbar">
-      <div class="topbar__brand-group">
-        <div class="topbar__brand">TownOfHost-Fun</div>
-        <a class="topbar__wiki-link" href="wiki/index.html">Wiki</a>
-      </div>
+      <div class="topbar__brand">TownOfHost-Fun</div>
+
+      <nav id="breadcrumb" class="breadcrumb" aria-label="パンくずリスト">
+        <span id="page-title">読み込み中…</span>
+      </nav>
+
       <nav class="content__links" aria-label="外部リンク">
-        <a href="https://github.com/ToritenKabosu/TownOfHost-Fun" target="_blank" rel="noreferrer noopener">
-          GitHub リポジトリ ↗
-        </a>
+        <a href="https://github.com/ToritenKabosu/TownOfHost-Fun" target="_blank" rel="noreferrer noopener">GitHub リポジトリ ↗</a>
       </nav>
     </header>
 
-    <main class="content">
-      <div class="markdown-body main-hero">
-        <div class="hero-glow" aria-hidden="true"></div>
+    <div class="body-layout">
+      <aside class="sidebar" aria-label="Wiki メニュー">
+        <div class="sidebar__search">
+          <label class="visually-hidden" for="wiki-search">Wikiを検索</label>
+          <svg class="sidebar__search-icon" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="m11.5 10.5 3 3m-6.75-1.25a5.25 5.25 0 1 1 0-10.5 5.25 5.25 0 0 1 0 10.5Z" />
+          </svg>
+          <input id="wiki-search" type="search" placeholder="ページを検索" autocomplete="off" />
+        </div>
+        <nav id="wiki-menu" aria-label="ページ一覧">
+          <p class="menu-loading">メニュー読み込み中…</p>
+        </nav>
+      </aside>
+      <div
+        id="sidebar-resizer"
+        role="separator"
+        aria-label="サイドバーの幅を変更"
+        aria-orientation="vertical"
+        aria-valuemin="200"
+        aria-valuemax="480"
+        aria-valuenow="280"
+        tabindex="0"
+      ></div>
 
-        <img class="hero-logo" src="https://github.com/user-attachments/assets/405d6eea-b030-4f1d-b2af-9db6dcdae80f"
-          alt="TownOfHost-Fun" />
-        <p class="hero-subtitle">
-          Among Us向けMod「TownOfHost-Fun」の公式サイトです。<br />
-          This mod is not affiliated with Among Us or Innersloth LLC,<br />
-          and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC.<br />
-          Portions of the materials contained herein are property of Innersloth LLC.<br />
-          © Innersloth LLC.<br />
-        </p>
-      </div>
-
-      <div class="markdown-body main-copy">
-        <section class="main-copy__section section-card">
-          <div class="section-card__header">
-            <h2>TownOfHost-Funとは?</h2>
-          </div>
-          <div class="section-card__body">
-            <p>
-              TownOfHost-Kから派生して開発中のAmong Us向けホストMODです。<br />
-              ホストがModを導入していれば参加者はMod導入なしで遊ぶことが出来ます。<br />
-              また、TOH-Kに独自の新役職や新機能を多数追加しています。<br />
-              役職一覧や仕様の詳細は<a href="wiki/index.html" target="_blank" rel="noopener noreferrer">Wiki</a>をご参照ください。<br />
-            </p>
-          </div>
-        </section>
-
-        <section class="main-copy__section section-card">
-          <div class="section-card__header">
-            <h2>本サイトについて</h2>
-          </div>
-          <div class="section-card__body">
-            <p>
-              TownOfHost-Funの公式ホームページです。<br />
-              現在は公式Wikiの閲覧機能のみを提供しています。<br />
-              今後、各種コンテンツなどを順次追加していく予定です。<br />
-            </p>
-          </div>
-        </section>
-
-        <section class="main-copy__section section-card">
-          <div class="section-card__header">
-            <h2>よくある質問</h2>
-          </div>
-          <div class="section-card__body">
-            <p>
-              <strong>Q. Modはどこから導入できますか?</strong><br/>
-              A. 現在DiscordサーバーもしくはLINEのオープンチャットから入手することが出来ますが、いずれも限られた場所からでしか参加できません。ご了承ください。<br/>
-              <strong>Q. 公開ルームにできません。何故ですか?</strong><br/>
-              A. 現在、Modから公開ルームへの制限をかけているためです。<br/>
-              <strong>Q. スマホやSwitchの参加者も遊べますか?</strong><br/>
-              A. はい。ただし、必ず1人はPC版かつTOH-F導入済みのAmong Usを用意する必要があります。<br/>
-              <strong>Q. バグや要望はどこに報告すればいいですか?</strong><br/>
-              A. 現在はDiscordサーバーでのみ報告を受け付けております。今後、ゲーム内からそれらの報告が可能になる機能を追加する予定です。<br/>
-              <strong>Q. Discordサーバー/LINEオープンチャットにはどうすれば参加できますか?</strong><br/>
-              A. 現在は限られた場所からでしか参加できません。ご了承ください。なお、開発者と連絡を取る必要がある場合、DiscordのDMから'toritenkabosu'までご連絡ください。<br/>
-            </p>
-          </div>
-        </section>
-
-        <section class="main-copy__section section-card">
-          <div class="section-card__header">
-            <h2>公式リンク/SNS</h2>
-          </div>
-          <div class="section-card__body">
-            <div class="social-buttons">
-              　<a href="https://github.com/ToritenKabosu/TownOfHost-Fun" target="_blank" rel="noopener noreferrer"
-                class="social-btn btn-github">
-                GitHub
-              </a>　
-              <a href="https://www.youtube.com/@TownOfHost-Fun" target="_blank" rel="noopener noreferrer"
-                class="social-btn btn-youtube">
-                YouTube
-              </a>　
-              <a href="https://x.com/TownOfHost_Fun" target="_blank" rel="noopener noreferrer" class="social-btn btn-x">
-                X (旧Twitter)
-              </a>　
-            </div>
-          </div>
-        </section>
-
-      </div>
-    </main>
+      <main class="content">
+        <div id="wiki-content" class="markdown-body">
+          <p>読み込み中...</p>
+        </div>
+      </main>
+    </div>
   </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const cards = Array.from(document.querySelectorAll('.section-card'));
-      if (!cards.length) return;
-
-      cards.forEach((card, index) => {
-        if (index < 2) {
-          const delay = index * 180;
-          card.style.transitionDelay = `${delay}ms`;
-        }
-      });
-
-      const revealCard = (card) => {
-        card.classList.add('in-view');
-      };
-
-      const checkCards = () => {
-        const windowHeight = window.innerHeight;
-        cards.forEach((card) => {
-          if (card.classList.contains('in-view')) return;
-          const rect = card.getBoundingClientRect();
-          if (rect.top < windowHeight * 0.891 && rect.bottom > -20) {
-            revealCard(card);
-          }
-        });
-      };
-
-      if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              revealCard(entry.target);
-              observer.unobserve(entry.target);
-            }
-          });
-        }, {
-          root: null,
-          rootMargin: '0px 0px -50% 0px',
-          threshold: 0.05,
-        });
-
-        cards.forEach((card) => observer.observe(card));
-      }
-
-      checkCards();
-      window.addEventListener('scroll', checkCards, { passive: true });
-      window.addEventListener('resize', checkCards);
-    });
-  </script>
+
 </body>
-
 </html>
