@@ -318,7 +318,8 @@ function parentDetails(element: Element): HTMLDetailsElement[] {
 
 function createMainPageBreadcrumb(): HTMLAnchorElement {
   const link = document.createElement('a');
-  link.href = '/';
+  // Point to the site root index.html relative to the wiki folder
+  link.href = '../index.html';
   link.textContent = 'メインページ';
   return link;
 }
