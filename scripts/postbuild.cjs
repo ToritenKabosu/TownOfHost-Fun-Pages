@@ -13,4 +13,12 @@ if (!fs.existsSync(srcIndex)) {
 
 if (!fs.existsSync(targetDir)) fs.mkdirSync(targetDir, { recursive: true });
 fs.copyFileSync(srcIndex, targetIndex);
-console.log('Copied dist/index.html -> dist/wiki/index.html');
+// Adjust asset paths in the copied wiki file so it references ../assets/ instead of ./assets/
+try {
+  let content = fs.readFileSync(targetIndex, 'utf8');
+  content = content.replace(/\.\/assets\//g, '../assets/');
+  fs.writeFileSync(targetIndex, content, 'utf8');
+  console.log('Copied dist/index.html -> dist/wiki/index.html (adjusted asset paths)');
+} catch (e) {
+  console.warn('Copied file but failed to adjust asset paths:', e && e.message ? e.message : e);
+}
