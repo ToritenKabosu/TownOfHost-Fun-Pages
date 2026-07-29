@@ -254,6 +254,44 @@ function sanitizeHtml(html: string): string {
   return parsed.body.innerHTML;
 }
 
+function appendSiteLog(message: string, level: 'error' | 'warn' | 'info' = 'error'): void {
+  if (level === 'error') console.error(message);
+  else if (level === 'warn') console.warn(message);
+  else console.log(message);
+
+  try {
+    let container = document.getElementById('site-log') as HTMLElement | null;
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'site-log';
+      container.style.position = 'fixed';
+      container.style.right = '12px';
+      container.style.bottom = '12px';
+      container.style.zIndex = '9999';
+      container.style.maxWidth = '360px';
+      container.style.fontSize = '13px';
+      document.body.append(container);
+    }
+
+    const entry = document.createElement('div');
+    entry.className = `site-log-entry site-log-${level}`;
+    entry.textContent = message;
+    entry.style.margin = '6px 0';
+    entry.style.padding = '8px 10px';
+    entry.style.borderRadius = '8px';
+    entry.style.color = '#fff';
+    entry.style.boxShadow = '0 6px 18px rgba(0,0,0,.18)';
+    if (level === 'error') entry.style.background = 'linear-gradient(180deg,#b91c1c,#7f1d1d)';
+    else if (level === 'warn') entry.style.background = 'linear-gradient(180deg,#f59e0b,#b45309)';
+    else entry.style.background = 'linear-gradient(180deg,#0ea5e9,#0369a1)';
+
+    container.append(entry);
+    setTimeout(() => entry.remove(), 20000);
+  } catch (e) {
+    /* ignore DOM errors */
+  }
+}
+
 function showMessage(kind: 'loading' | 'error', message: string): void {
   contentEl.replaceChildren();
   const notice = document.createElement('p');
@@ -515,8 +553,13 @@ async function loadSidebar(): Promise<void> {
       try { sessionStorage.setItem(SIDEBAR_CACHE_KEY, html); } catch {}
     }
   } catch (err) {
-    if (!cached) menuEl.innerHTML = '<p class="menu-error">メニューを読み込めませんでした。</p>';
-    else console.warn('Sidebar background refresh failed:', err);
+    if (!cached) {
+      menuEl.innerHTML = '<p class="menu-error">メニューを読み込めませんでした。</p>';
+      appendSiteLog(`Sidebar load failed: ${err instanceof Error ? err.message : String(err)}`, 'error');
+    } else {
+      console.warn('Sidebar background refresh failed:', err);
+      appendSiteLog(`Sidebar background refresh failed: ${err instanceof Error ? err.message : String(err)}`, 'warn');
+    }
   }
 }
 
