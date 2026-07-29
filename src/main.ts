@@ -25,6 +25,23 @@ const SIDEBAR_WIDTH_STORAGE_KEY = 'tohf-wiki-sidebar-width';
 const SIDEBAR_MIN_WIDTH = 200;
 const SIDEBAR_MAX_WIDTH = 480;
 
+const PAGE_CACHE_PREFIX = 'tohf:wiki:page:';
+const SIDEBAR_CACHE_KEY = 'tohf:wiki:sidebar';
+const pageCache = new Map<string, string>();
+
+async function fetchWithTimeout(url: string, timeout = 8000): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(id);
+    return res;
+  } catch (err) {
+    clearTimeout(id);
+    throw err;
+  }
+}
+
 function escapeHtml(value: string): string {
   return value.replace(/[&<>'"]/g, (character) => ({
     '&': '&amp;',
@@ -401,21 +418,37 @@ function preparePageContent(): void {
 async function loadWikiPage(pageName: string, updateUrl = false): Promise<void> {
   const normalizedPage = pageName.trim() || DEFAULT_PAGE;
   if (updateUrl) setPageInUrl(normalizedPage);
-
   window.scrollTo({ top: 0, behavior: 'smooth' });
   renderPageBreadcrumb(normalizedPage);
   document.title = `${normalizedPage} | TownOfHost-Fun`;
   updateActiveMenu(normalizedPage);
-  showMessage('loading', '読み込み中…');
+
+  const cacheKey = PAGE_CACHE_PREFIX + normalizedPage;
+  const cachedHtml = sessionStorage.getItem(cacheKey) || pageCache.get(normalizedPage);
+  if (cachedHtml) {
+    contentEl.innerHTML = cachedHtml;
+    preparePageContent();
+  } else {
+    showMessage('loading', '読み込み中…');
+  }
 
   try {
-    const response = await fetch(wikiUrl(normalizedPage));
+    const response = await fetchWithTimeout(wikiUrl(normalizedPage), 8000);
     if (!response.ok) throw new Error(`「${normalizedPage}」を取得できませんでした。${response.status == 404 ? "ページが見つかりません。" : `(${response.status})`}`);
     const markdown = normalizeWikiMarkdown(await response.text());
-    contentEl.innerHTML = sanitizeHtml(await marked.parse(markdown));
-    preparePageContent();
+    const newHtml = sanitizeHtml(await marked.parse(markdown));
+
+    if (newHtml !== cachedHtml) {
+      contentEl.innerHTML = newHtml;
+      preparePageContent();
+      try {
+        sessionStorage.setItem(cacheKey, newHtml);
+      } catch {}
+      pageCache.set(normalizedPage, newHtml);
+    }
   } catch (error) {
-    showMessage('error', error instanceof Error ? error.message : 'ページの読み込みに失敗しました。');
+    if (!cachedHtml) showMessage('error', error instanceof Error ? error.message : 'ページの読み込みに失敗しました。');
+    else console.warn('Wiki background refresh failed:', error);
   }
 }
 
@@ -454,19 +487,36 @@ function loadCategoryPage(categoryId: string, updateUrl = false): void {
 }
 
 async function loadSidebar(): Promise<void> {
-  menuEl.innerHTML = '<p class="menu-loading">メニュー読み込み中…</p>';
-  try {
-    const response = await fetch(wikiUrl('_Sidebar'));
-    if (!response.ok) throw new Error('_Sidebar.md の取得に失敗しました。');
-    menuEl.innerHTML = sanitizeHtml(await marked.parse(normalizeWikiMarkdown(await response.text())));
+  const cached = sessionStorage.getItem(SIDEBAR_CACHE_KEY);
+  if (cached) {
+    menuEl.innerHTML = cached;
     prepareWikiLinks(menuEl);
     removeSidebarLinkLineText();
     menuEl.querySelectorAll<HTMLDetailsElement>('details').forEach((details, index) => {
       details.dataset.categoryId = `category-${index}`;
     });
     filterSidebar(searchInput.value);
-  } catch {
-    menuEl.innerHTML = '<p class="menu-error">メニューを読み込めませんでした。</p>';
+  } else {
+    menuEl.innerHTML = '<p class="menu-loading">メニュー読み込み中…</p>';
+  }
+
+  try {
+    const response = await fetchWithTimeout(wikiUrl('_Sidebar'), 8000);
+    if (!response.ok) throw new Error('_Sidebar.md の取得に失敗しました。');
+    const html = sanitizeHtml(await marked.parse(normalizeWikiMarkdown(await response.text())));
+    if (html !== cached) {
+      menuEl.innerHTML = html;
+      prepareWikiLinks(menuEl);
+      removeSidebarLinkLineText();
+      menuEl.querySelectorAll<HTMLDetailsElement>('details').forEach((details, index) => {
+        details.dataset.categoryId = `category-${index}`;
+      });
+      filterSidebar(searchInput.value);
+      try { sessionStorage.setItem(SIDEBAR_CACHE_KEY, html); } catch {}
+    }
+  } catch (err) {
+    if (!cached) menuEl.innerHTML = '<p class="menu-error">メニューを読み込めませんでした。</p>';
+    else console.warn('Sidebar background refresh failed:', err);
   }
 }
 
