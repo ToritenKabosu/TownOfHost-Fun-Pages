@@ -1,3 +1,4 @@
+import './style.css';
 import 'github-markdown-css/github-markdown.css';
 import { marked } from 'marked';
 
