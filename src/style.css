@@ -172,6 +172,7 @@ body { margin: 0; position: relative; min-height: 100vh; overflow-x: hidden; bac
 .content__links a { color: #4e3eff; font-size: .8rem; text-decoration: none; }
 .content__links a:hover { text-decoration: underline; }
 .markdown-body { max-width: 960px; margin: 0 auto; padding: 48px clamp(28px, 4vw, 64px) 72px; color: #5a5a65; font-size: 16px; line-height: 1.85; }
+.body-layout .markdown-body { margin: 0; padding: 40px clamp(24px, 3.5vw, 48px) 72px; }
 .markdown-body a { color: #4e3eff; }
 .markdown-body h1,
 .markdown-body h2,
