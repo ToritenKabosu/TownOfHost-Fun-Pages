@@ -8,6 +8,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         wiki: resolve(__dirname, 'wiki/index.html'),
+        confirmRedirect: resolve(__dirname, 'confirm-redirect.html'),
       },
     },
   },

@@ -583,10 +583,9 @@ document.addEventListener('click', (event) => {
   const externalLink = (event.target as Element | null)?.closest<HTMLAnchorElement>('a[target="_blank"]');
   if (externalLink && (contentEl.contains(externalLink) || menuEl.contains(externalLink))) {
     event.preventDefault();
-    const confirmed = window.confirm(`外部サイトへ移動します。よろしいですか？\n\n${externalLink.href}`);
-    if (confirmed) {
-      window.open(externalLink.href, '_blank', 'noopener,noreferrer');
-    }
+    const redirectPageUrl = new URL('../confirm-redirect.html', location.href);
+    redirectPageUrl.searchParams.set('url', externalLink.href);
+    window.location.href = redirectPageUrl.href;
   }
 });
 

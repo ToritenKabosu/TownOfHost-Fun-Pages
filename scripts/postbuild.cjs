@@ -27,3 +27,18 @@ if (!fs.existsSync(targetIndex)) {
 } else {
   console.log('dist/wiki/index.html already exists; skipping postbuild copy.');
 }
+
+// Generate fallback paths for confirm-redirect and comfirm-redirect
+const redirectSrc = path.join(dist, 'confirm-redirect.html');
+if (fs.existsSync(redirectSrc)) {
+  const dirs = [
+    path.join(dist, 'confirm-redirect'),
+    path.join(dist, 'comfirm-redirect')
+  ];
+  dirs.forEach(d => {
+    if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
+    fs.copyFileSync(redirectSrc, path.join(d, 'index.html'));
+  });
+  fs.copyFileSync(redirectSrc, path.join(dist, 'comfirm-redirect.html'));
+  console.log('Generated compatibility routes for confirm-redirect & comfirm-redirect');
+}

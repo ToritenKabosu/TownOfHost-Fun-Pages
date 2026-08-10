@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>外部リンクの確認 | TownOfHost-Fun</title>
+  <link rel="stylesheet" href="./src/style.css" />
+  <style>
+    .redirect-container {
+      min-height: calc(100vh - var(--topbar-height));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .redirect-card {
+      max-width: 580px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-top: 4px solid #5b6bfb;
+      border-radius: 20px;
+      padding: 36px 32px;
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+      text-align: center;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .redirect-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(91, 107, 251, 0.1);
+      color: #4e3eff;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .redirect-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .redirect-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #171720;
+      margin: 0 0 12px;
+      line-height: 1.4;
+    }
+
+    .redirect-message {
+      font-size: 1.05rem;
+      color: #4b5563;
+      margin: 0 0 24px;
+      line-height: 1.6;
+    }
+
+    .redirect-url-box {
+      background: #f1f3f9;
+      border: 1px solid #e2e5f0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 28px;
+      word-break: break-all;
+      color: #374151;
+      font-size: 0.92rem;
+      font-family: monospace;
+      text-align: left;
+    }
+
+    .redirect-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-confirm {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 32px;
+      background: linear-gradient(135deg, #4e3eff, #3b2cde);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 1.02rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(78, 62, 255, 0.3);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .btn-confirm:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(78, 62, 255, 0.4);
+      background: linear-gradient(135deg, #3c2cff, #2f20c9);
+    }
+
+    .btn-cancel {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      background: #ffffff;
+      color: #4b5563;
+      font-weight: 600;
+      font-size: 1.02rem;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn-cancel:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+      color: #1f2937;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="topbar__brand-group">
+        <a class="topbar__brand" href="index.html" style="text-decoration: none;">TownOfHost-Fun</a>
+        <a class="topbar__wiki-link" href="wiki/index.html">Wiki</a>
+      </div>
+    </header>
+
+    <main class="redirect-container">
+      <div class="redirect-card">
+        <div class="redirect-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </div>
+
+        <h1 class="redirect-title">外部リンクへの移動確認</h1>
+        <p class="redirect-message">
+          外部リンクを検出しました。念のため、確認をお願いします。
+        </p>
+
+        <div id="url-display" class="redirect-url-box">読み込み中...</div>
+
+        <div class="redirect-actions">
+          <button id="btn-confirm" class="btn-confirm">確認 (移動する)</button>
+          <a id="btn-cancel" class="btn-cancel" href="javascript:history.back();">戻る</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const targetUrl = params.get('url');
+
+      const urlDisplay = document.getElementById('url-display');
+      const confirmBtn = document.getElementById('btn-confirm');
+      const cancelBtn = document.getElementById('btn-cancel');
+
+      if (targetUrl) {
+        try {
+          const parsed = new URL(targetUrl);
+          // 危険なスキーム（javascript:等）を防止
+          if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+            urlDisplay.textContent = targetUrl;
+            confirmBtn.addEventListener('click', function () {
+              window.location.href = targetUrl;
+            });
+          } else {
+            urlDisplay.textContent = '無効なURLスキームです: ' + targetUrl;
+            confirmBtn.disabled = true;
+            confirmBtn.style.opacity = '0.5';
+            confirmBtn.style.cursor = 'not-allowed';
+          }
+        } catch (e) {
+          urlDisplay.textContent = '無効なURLです: ' + targetUrl;
+          confirmBtn.disabled = true;
+          confirmBtn.style.opacity = '0.5';
+          confirmBtn.style.cursor = 'not-allowed';
+        }
+      } else {
+        urlDisplay.textContent = '移動先のURLが指定されていません。';
+        confirmBtn.disabled = true;
+        confirmBtn.style.opacity = '0.5';
+        confirmBtn.style.cursor = 'not-allowed';
+      }
+
+      // 履歴がない場合はWikiトップに戻るリンクに変更
+      if (window.history.length <= 1) {
+        cancelBtn.href = 'wiki/index.html';
+      }
+    });
+  </script>
+</body>
+
+</html>
